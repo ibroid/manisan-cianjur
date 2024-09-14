@@ -1,50 +1,139 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import { Image, StyleSheet, Platform, ActivityIndicator, View } from 'react-native';
 
 import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-
+import { useMemo, useState } from 'react';
+import useFetchTimeline from '@/hooks/useFetchTimeline';
+import { Button, Modal, Surface, TextInput, Text, Icon, MD3Colors } from 'react-native-paper';
+import Timeline from "react-native-timeline-flatlist";
+import { Link, router } from 'expo-router';
 export default function HomeScreen() {
+
+  const thisYear = useMemo(() => {
+    return new Date().getFullYear()
+  }, [])
+
+  const [nomorPerkara, setNomorPerkara] = useState<string>("")
+
+  const {
+    loading,
+    error,
+    errorMessage,
+    startFetchTimeline,
+    cancelFetchTimeline,
+    timelineData
+  } = useFetchTimeline()
+
   return (
     <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
+      headerBackgroundColor={{ light: '#9AC1FB', dark: '#CCFDDA' }}
       headerImage={
         <Image
-          source={require('@/assets/images/partial-react-logo.png')}
+          source={require('@/assets/images/banner_beranda.png')}
           style={styles.reactLogo}
+          resizeMode="contain"
         />
       }>
       <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
+        <ThemedText type="title">Selamat Datang!</ThemedText>
         <HelloWave />
+
       </ThemedView>
       <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({ ios: 'cmd + d', android: 'cmd + m' })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
+        <Text>Silahkan masukan nomor perkara untuk melihat proses perkara</Text>
+        <TextInput
+          label="Nomor Perkara"
+          placeholder={`Contoh : 123/Pdt.G/${thisYear}/PA.JU`}
+          value={nomorPerkara}
+          onChangeText={text => setNomorPerkara(text)}
+          right={<TextInput.Icon icon="pencil" />}
+        />
+        <Button
+          disabled={loading}
+          buttonColor='#9AC1FB'
+          mode="contained"
+          onPress={() => {
+            if (nomorPerkara.length > 0) {
+              startFetchTimeline(nomorPerkara)
+            }
+          }}>
+          Cari
+        </Button>
+        {loading && <ActivityIndicator size="large" />}
+        {error && <Text>Terjadi Kesalahan : {errorMessage}</Text>}
+        {
+          !loading && !error && timelineData && timelineData.data.length > 0 &&
+          <>
+            <ThemedText>Proses perkara nomor : {timelineData.nomor_perkara}</ThemedText>
+            <Timeline
+              style={{
+                flex: 1,
+                marginTop: 20,
+              }}
+              isUsingFlatlist={false}
+              circleSize={20}
+              dotSize={18}
+              circleColor='rgba(0,0,0,0)'
+              lineColor='rgb(45,156,219)'
+              timeContainerStyle={{ minWidth: 52 }}
+              timeStyle={{ textAlign: 'center', backgroundColor: '#ff9797', color: 'white', padding: 5, borderRadius: 13 }}
+              descriptionStyle={{ color: 'gray' }}
+              innerCircle={'dot'}
+              onEventPress={() => { }}
+              dotColor="#FF9797"
+              separator={false}
+              detailContainerStyle={{ marginBottom: 20, paddingLeft: 5, paddingRight: 5, backgroundColor: "#BBDAFF", borderRadius: 10 }}
+              columnFormat='two-column'
+              data={timelineData.data.map((v, i) => {
+                return {
+                  time: v.tanggal,
+                  title: v.judul,
+                  description: v.isi + "\n\n" + v.keterangan,
+
+                }
+              })}
+            />
+            <Surface style={{
+              padding: 24,
+              height: "auto",
+              width: "auto",
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: "#FF9797",
+              borderRadius: 12
+            }}>
+              <View style={{ flexDirection: "row", gap: 6, alignContent: "center", alignItems: "center" }}>
+                <Icon
+                  source="alert-circle-outline"
+                  color={"#fff"}
+                  size={20}
+                />
+                <Text variant="titleMedium" style={{ color: "#fff", textAlign: "justify" }} >
+                  Demi melindungi privasi data pribadi dari para pihak. Kami mohon maaf tidak bisa menampilkan data senditif seperti nama, alamat dan lainnya.
+                </Text>
+              </View>
+            </Surface>
+            <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+
+              <Link asChild href={`/transaksi/${timelineData.perkara_id}`}>
+                <Button
+                  icon={"cash"}
+                >
+                  Riwayat Transaksi
+                </Button>
+              </Link>
+
+              <Button
+                onPress={() => [
+                ]}
+                icon={"certificate"}
+              >Lihat Putusan</Button>
+            </View>
+          </>
+        }
+
       </ThemedView>
     </ParallaxScrollView>
   );
@@ -57,14 +146,10 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+    gap: 12,
   },
   reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+    width: "90%",
+    alignSelf: "center"
   },
 });

@@ -11,24 +11,38 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+        tabBarActiveTintColor: "#9AC1FB",
         headerShown: false,
+        headerStyle: {
+          backgroundColor: "#9AC1FB"
+        }
       }}>
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
+          title: 'Beranda',
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon name={focused ? 'home' : 'home-outline'} color={color} />
           ),
         }}
       />
       <Tabs.Screen
+        name="pelayanan"
+        options={{
+          title: 'Pelayanan',
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon name={focused ? 'apps' : 'apps'} color={color} />
+          ),
+          headerShown: true,
+          headerTintColor: "#fff"
+        }}
+      />
+      <Tabs.Screen
         name="explore"
         options={{
-          title: 'Explore',
+          title: 'Informasi',
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'code-slash' : 'code-slash-outline'} color={color} />
+            <TabBarIcon name={focused ? 'information-circle' : 'information-circle-outline'} color={color} />
           ),
         }}
       />

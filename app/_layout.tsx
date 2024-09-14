@@ -28,9 +28,20 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
+      <Stack
+        screenOptions={{
+          headerStyle: {
+            backgroundColor: "#9AC1FB"
+          }
+        }}
+      >
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="+not-found" />
+        <Stack.Screen name="transaksi/[id]"
+          options={{
+            title: "Riwayat Transaksi",
+            headerTintColor: "#fff"
+          }} />
       </Stack>
     </ThemeProvider>
   );
