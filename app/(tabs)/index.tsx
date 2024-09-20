@@ -1,16 +1,21 @@
-import { Image, StyleSheet, Platform, ActivityIndicator, View } from 'react-native';
+import { Image, StyleSheet, ActivityIndicator, View } from 'react-native';
 
 import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { useMemo, useState } from 'react';
+import { useCallback, useContext, useMemo, useState } from 'react';
 import useFetchTimeline from '@/hooks/useFetchTimeline';
-import { Button, Modal, Surface, TextInput, Text, Icon, MD3Colors } from 'react-native-paper';
+import { Button, Surface, TextInput, Text, Icon, MD3Colors, ProgressBar } from 'react-native-paper';
 import Timeline from "react-native-timeline-flatlist";
-import { Link, router } from 'expo-router';
-export default function HomeScreen() {
+import { Link, router, useFocusEffect } from 'expo-router';
+import usePreviewPutusan from '@/hooks/usePreviewPutusan';
+import { MainContext } from '@/context/MainProvider';
+import PreviewPutusanButton from '@/components/PreviewPutusanButton';
 
+
+export default function HomeScreen() {
+  const { destate } = useContext(MainContext)
   const thisYear = useMemo(() => {
     return new Date().getFullYear()
   }, [])
@@ -25,6 +30,15 @@ export default function HomeScreen() {
     cancelFetchTimeline,
     timelineData
   } = useFetchTimeline()
+
+  useFocusEffect(
+    useCallback(() => {
+
+      return () => {
+        cancelFetchTimeline()
+      }
+    }, [])
+  );
 
   return (
     <ParallaxScrollView
@@ -125,11 +139,7 @@ export default function HomeScreen() {
                 </Button>
               </Link>
 
-              <Button
-                onPress={() => [
-                ]}
-                icon={"certificate"}
-              >Lihat Putusan</Button>
+              <PreviewPutusanButton perkara_id={timelineData.perkara_id} />
             </View>
           </>
         }
