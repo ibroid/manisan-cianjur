@@ -60,25 +60,25 @@ export default function TabTwoScreen() {
         <View style={{ flexDirection: "row", gap: 26, alignItems: "center" }}>
           <Icon size={20} source={"instagram"}></Icon>
           <ThemedText>
-            www.pa-cianjur.go.id
+            @pa.cianjur_official
           </ThemedText>
         </View>
         <View style={{ flexDirection: "row", gap: 26, alignItems: "center" }}>
           <Icon size={20} source={"facebook"}></Icon>
           <ThemedText>
-            www.pa-cianjur.go.id
+            Pengadilan Agama Cianjur
           </ThemedText>
         </View>
         <View style={{ flexDirection: "row", gap: 26, alignItems: "center" }}>
           <Icon size={20} source={"twitter"}></Icon>
           <ThemedText>
-            www.pa-cianjur.go.id
+            @pacianjur
           </ThemedText>
         </View>
         <View style={{ flexDirection: "row", gap: 26, alignItems: "center" }}>
           <Icon size={20} source={"youtube"}></Icon>
           <ThemedText>
-            www.pa-cianjur.go.id
+            Pengadilan Agama Cianjur
           </ThemedText>
         </View>
       </Collapsible>
