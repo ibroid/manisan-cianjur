@@ -9,7 +9,7 @@ export default function FindMyPerkaraCard() {
   const [nik, setNik] = useState<string>("")
 
   return (
-    <Card mode="contained">
+    <Card mode="contained" style={{ marginBottom: 12 }}>
       <Card.Title
         title="Lupa Nomor Perkara ?"
         left={(props) => <Avatar.Icon {...props} icon="account" />}
