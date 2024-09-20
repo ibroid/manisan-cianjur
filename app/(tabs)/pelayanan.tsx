@@ -1,10 +1,15 @@
+import FindMyPerkaraCard from "@/components/FindMyPerkaraCard";
 import { View } from "react-native";
-import { Text } from "react-native-paper";
+import { GestureHandlerRootView, ScrollView } from "react-native-gesture-handler";
+import { Avatar, Button, Card, IconButton, Text, TextInput } from "react-native-paper";
 
 export default function Page() {
   return (
-    <View>
-      <Text>Coming Soon :)</Text>
-    </View>
+    <GestureHandlerRootView
+      style={{ flex: 1, padding: 12 }}>
+      <ScrollView>
+        <FindMyPerkaraCard />
+      </ScrollView>
+    </GestureHandlerRootView>
   )
 }
